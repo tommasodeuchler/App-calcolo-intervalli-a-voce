@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Allenatore Musicale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .light {
+      background-color: #f0f0f0;
+      color: #000000;
+    }
+
+    .centrato {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 4rem 2rem 2rem;
+    }
+
+    h1, h2 {
+      margin-bottom: 1rem;
+    }
+
+    .menu, .allenamento {
+      display: none;
+    }
+
+    .visibile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu button {
+      width: 300px;
+      padding: 15px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1e88e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    .menu button:hover:not(:disabled) {
+      background-color: #1565c0;
+    }
+
+    .menu button:disabled {
+      background-color: #555;
+      color: white;
+      cursor: default;
+    }
+
+    .light .menu button:disabled {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .riga-impostazioni {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      width: 200px;
+      background-color: #f0f0f0;
+      color: #121212;
+    }
+
+    .light select {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .comandi {
+      margin: 2rem 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .comandi button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      color: #121212;
+      cursor: pointer;
+    }
+
+    .light .comandi button {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .display {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    #question, #answer {
+      font-size: 24px;
+      margin: 1rem 0;
+    }
+
+    #answer {
+      color: #4caf50;
+    }
+
+    .light #answer {
+      color: #2e7d32;
+    }
+
+    .tema {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      padding: 12px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      color: #121212;
+      border: none;
+      cursor: pointer;
+    }
+
+    .light .tema {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    #beginnerBtn {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      color: #121212;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .light #beginnerBtn {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    #multiKeysContainer {
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    #multiKeysContainer label {
+      font-size: 14px;
+    }
+
+    .multi-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="centrato menu visibile" id="schermata-menu">
+    <h1>Allenatore Musicale</h1>
+    <button onclick="mostraAllenamento()">Intervalli musicali singoli</button>
+    <button disabled>Triadi (in arrivo)</button>
+    <button disabled>Quadriadi (in arrivo)</button>
+    <button disabled>Progressioni II V I (in arrivo)</button>
+  </div>
+
+  <div class="centrato allenamento" id="schermata-allenamento">
+    <h2>Allenamento Intervalli</h2>
+
+    <div class="riga-impostazioni">
+      <div class="campo">
+        <label for="livello">Livello:</label>
+        <select id="livello">
+          <option>Beginner (senza tempo)</option>
+          <option>Intermedio (10s)</option>
+          <option>Advanced (1s)</option>
+          <option>Pro</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="intervalli">Intervalli:</label>
+        <select id="intervalli">
+          <option>Misti</option>
+          <option>Naturali</option>
+          <option>Alterati</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="tonalita">Tonalità:</label>
+        <select id="tonalita">
+          <option>Casuale</option>
+          <option>Do</option><option>Reb</option><option>Re</option><option>Mib</option>
+          <option>Mi</option><option>Fa</option><option>Solb</option><option>Sol</option>
+          <option>Lab</option><option>La</option><option>Sib</option><option>Si</option>
+          <option>Fa#</option>
+          <option>Scelta multipla</option>
+        </select>
+        <div id="multiKeysContainer" style="display:none;">
+          <label>Seleziona più tonalità:</label>
+          <div class="multi-row">
+            <label><input type="checkbox" value="Do"> Do</label>
+            <label><input type="checkbox" value="Reb"> Reb</label>
+            <label><input type="checkbox" value="Re"> Re</label>
+            <label><input type="checkbox" value="Mib"> Mib</label>
+          </div>
+          <div class="multi-row">
+            <label><input type="checkbox" value="Mi"> Mi</label>
+            <label><input type="checkbox" value="Fa"> Fa</label>
+            <label><input type="checkbox" value="Solb"> Solb</label>
+            <label><input type="checkbox" value="Sol"> Sol</label>
+          </div>
+          <div class="multi-row">
+            <label><input type="checkbox" value="Lab"> Lab</label>
+            <label><input type="checkbox" value="La"> La</label>
+            <label><input type="checkbox" value="Sib"> Sib</label>
+            <label><input type="checkbox" value="Si"> Si</label>
+            <label><input type="checkbox" value="Fa#"> Fa#</label>
+          </div>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="direzione">Direzione:</label>
+        <select id="direzione">
+          <option>Diretta</option>
+          <option>Inversa</option>
+          <option>Mista</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="quantita">N. domande:</label>
+        <select id="quantita">
+          <option>20</option>
+          <option>50</option>
+          <option>100</option>
+          <option>∞</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="comandi">
+      <button id="actionBtn">Start</button>
+      <button id="pausaBtn">Pausa</button>
+      <button onclick="tornaAlMenu()">Torna al menù</button>
+    </div>
+
+    <div class="display">
+      <div id="question"></div>
+      <div id="answer"></div>
+      <div id="beginnerContainer"></div>
+    </div>
+
+    <button class="tema" id="temaBtn">Tema: Scuro/Chiaro</button>
+  </div>
+
+  <script>
+    const keys = ["Do", "Reb", "Re", "Mib", "Mi", "Fa", "Solb", "Sol", "Lab", "La", "Sib", "Si", "Fa#"];
+
+    const intervalData = {"Do":{"2b":{"theoretical":"Reb","practical":"Reb"},"2":{"theoretical":"Re","practical":"Re"},"2#":{"theoretical":"Re#","practical":"Re#"},"3b":{"theoretical":"Mib","practical":"Mib"},"3":{"theoretical":"Mi","practical":"Mi"},"4":{"theoretical":"Fa","practical":"Fa"},"4#":{"theoretical":"Fa#","practical":"Fa#"},"5b":{"theoretical":"Solb","practical":"Solb"},"5":{"theoretical":"Sol","practical":"Sol"},"5#":{"theoretical":"Sol#","practical":"Sol#"},"6b":{"theoretical":"Lab","practical":"Lab"},"6":{"theoretical":"La","practical":"La"},"7b":{"theoretical":"Sib","practical":"Sib"},"7":{"theoretical":"Si","practical":"Si"},"9b":{"theoretical":"Reb","practical":"Reb"},"9":{"theoretical":"Re","practical":"Re"},"9#":{"theoretical":"Re#","practical":"Re#"},"11":{"theoretical":"Fa","practical":"Fa"},"11#":{"theoretical":"Fa#","practical":"Fa#"},"13":{"theoretical":"La","practical":"La"},"13b":{"theoretical":"Lab","practical":"Lab"}},"Reb":{"2b":{"theoretical":"Re","practical":"Re"},"2":{"theoretical":"Mib","practical":"Mib"},"2#":{"theoretical":"Mi","practical":"Mi"},"3b":{"theoretical":"Fab","practical":"Mi"},"3":{"theoretical":"Fa","practical":"Fa"},"4":{"theoretical":"Solb","practical":"Solb"},"4#":{"theoretical":"Sol","practical":"Sol"},"5b":{"theoretical":"Sol","practical":"Sol"},"5":{"theoretical":"Lab","practical":"Lab"},"5#":{"theoretical":"La","practical":"La"},"6b":{"theoretical":"La","practical":"La"},"6":{"theoretical":"Sib","practical":"Sib"},"7b":{"theoretical":"Dob","practical":"Si"},"7":{"theoretical":"Do","practical":"Do"},"9b":{"theoretical":"Re","practical":"Re"},"9":{"theoretical":"Mib","practical":"Mib"},"9#":{"theoretical":"Mi","practical":"Mi"},"11":{"theoretical":"Solb","practical":"Solb"},"11#":{"theoretical":"Sol","practical":"Sol"},"13":{"theoretical":"Sib","practical":"Sib"},"13b":{"theoretical":"La","practical":"La"}},"Re":{"2b":{"theoretical":"Mib","practical":"Mib"},"2":{"theoretical":"Mi","practical":"Mi"},"2#":{"theoretical":"Mi#","practical":"Fa"},"3b":{"theoretical":"Fa","practical":"Fa"},"3":{"theoretical":"Fa#","practical":"Fa#"},"4":{"theoretical":"Sol","practical":"Sol"},"4#":{"theoretical":"Sol#","practical":"Sol#"},"5b":{"theoretical":"Lab","practical":"Lab"},"5":{"theoretical":"La","practical":"La"},"5#":{"theoretical":"La#","practical":"La#"},"6b":{"theoretical":"Sib","practical":"Sib"},"6":{"theoretical":"Si","practical":"Si"},"7b":{"theoretical":"Do","practical":"Do"},"7":{"theoretical":"Do#","practical":"Do#"},"9b":{"theoretical":"Mib","practical":"Mib"},"9":{"theoretical":"Mi","practical":"Mi"},"9#":{"theoretical":"Mi#","practical":"Fa"},"11":{"theoretical":"Sol","practical":"Sol"},"11#":{"theoretical":"Sol#","practical":"Sol#"},"13":{"theoretical":"Si","practical":"Si"},"13b":{"theoretical":"Sib","practical":"Sib"}},"Mib":{"2b":{"theoretical":"Mi","practical":"Mi"},"2":{"theoretical":"Fa","practical":"Fa"},"2#":{"theoretical":"Fa#","practical":"Solb"},"3b":{"theoretical":"Solb","practical":"Solb"},"3":{"theoretical":"Sol","practical":"Sol"},"4":{"theoretical":"Lab","practical":"Lab"},"4#":{"theoretical":"La","practical":"La"},"5b":{"theoretical":"La","practical":"La"},"5":{"theoretical":"Sib","practical":"Sib"},"5#":{"theoretical":"Si","practical":"Si"},"6b":{"theoretical":"Dob","practical":"Si"},"6":{"theoretical":"Do","practical":"Do"},"7b":{"theoretical":"Reb","practical":"Reb"},"7":{"theoretical":"Re","practical":"Re"},"9b":{"theoretical":"Mi","practical":"Mi"},"9":{"theoretical":"Fa","practical":"Fa"},"9#":{"theoretical":"Fa#","practical":"Fa#"},"11":{"theoretical":"Lab","practical":"Lab"},"11#":{"theoretical":"La","practical":"La"},"13":{"theoretical":"Do","practical":"Do"},"13b":{"theoretical":"Dob","practical":"Si"}},"Mi":{"2b":{"theoretical":"Fa","practical":"Fa"},"2":{"theoretical":"Fa#","practical":"Fa#"},"2#":{"theoretical":"Sol","practical":"Sol"},"3b":{"theoretical":"Sol","practical":"Sol"},"3":{"theoretical":"Sol#","practical":"Sol#"},"4":{"theoretical":"La","practical":"La"},"4#":{"theoretical":"La#","practical":"La#"},"5b":{"theoretical":"Sib","practical":"Sib"},"5":{"theoretical":"Si","practical":"Si"},"5#":{"theoretical":"Si#","practical":"Do"},"6b":{"theoretical":"Do","practical":"Do"},"6":{"theoretical":"Do#","practical":"Do#"},"7b":{"theoretical":"Re","practical":"Re"},"7":{"theoretical":"Re#","practical":"Re#"},"9b":{"theoretical":"Fa","practical":"Fa"},"9":{"theoretical":"Fa#","practical":"Fa#"},"9#":{"theoretical":"Sol","practical":"Sol"},"11":{"theoretical":"La","practical":"La"},"11#":{"theoretical":"La#","practical":"La#"},"13":{"theoretical":"Do#","practical":"Do#"},"13b":{"theoretical":"Do","practical":"Do"}},"Fa":{"2b":{"theoretical":"Solb","practical":"Solb"},"2":{"theoretical":"Sol","practical":"Sol"},"2#":{"theoretical":"Sol#","practical":"Sol#"},"3b":{"theoretical":"Lab","practical":"Lab"},"3":{"theoretical":"La","practical":"La"},"4":{"theoretical":"Sib","practical":"Sib"},"4#":{"theoretical":"Si","practical":"Si"},"5b":{"theoretical":"Dob","practical":"Si"},"5":{"theoretical":"Do","practical":"Do"},"5#":{"theoretical":"Do#","practical":"Do#"},"6b":{"theoretical":"Reb","practical":"Reb"},"6":{"theoretical":"Re","practical":"Re"},"7b":{"theoretical":"Mib","practical":"Mib"},"7":{"theoretical":"Mi","practical":"Mi"},"9b":{"theoretical":"Solb","practical":"Solb"},"9":{"theoretical":"Sol","practical":"Sol"},"9#":{"theoretical":"Sol#","practical":"Sol#"},"11":{"theoretical":"Sib","practical":"Sib"},"11#":{"theoretical":"Si","practical":"Si"},"13":{"theoretical":"Re","practical":"Re"},"13b":{"theoretical":"Reb","practical":"Reb"}},"Fa#":{"2b":{"theoretical":"Sol","practical":"Sol"},"2":{"theoretical":"Sol#","practical":"Sol#"},"2#":{"theoretical":"La","practical":"La"},"3b":{"theoretical":"La","practical":"La"},"3":{"theoretical":"La#","practical":"La#"},"4":{"theoretical":"Si","practical":"Si"},"4#":{"theoretical":"Si#","practical":"Do"},"5b":{"theoretical":"Do","practical":"Do"},"5":{"theoretical":"Do#","practical":"Do#"},"5#":{"theoretical":"Re","practical":"Re"},"6b":{"theoretical":"Re","practical":"Re"},"6":{"theoretical":"Re#","practical":"Re#"},"7b":{"theoretical":"Mi","practical":"Mi"},"7":{"theoretical":"Mi#","practical":"Fa"},"9b":{"theoretical":"Sol","practical":"Sol"},"9":{"theoretical":"Sol#","practical":"Sol#"},"9#":{"theoretical":"La","practical":"La"},"11":{"theoretical":"Si","practical":"Si"},"11#":{"theoretical":"Si#","practical":"Do"},"13":{"theoretical":"Re#","practical":"Re#"},"13b":{"theoretical":"Re","practical":"Re"}},"Sol":{"2b":{"theoretical":"Lab","practical":"Lab"},"2":{"theoretical":"La","practical":"La"},"2#":{"theoretical":"La#","practical":"La#"},"3b":{"theoretical":"Sib","practical":"Sib"},"3":{"theoretical":"Si","practical":"Si"},"4":{"theoretical":"Do","practical":"Do"},"4#":{"theoretical":"Do#","practical":"Do#"},"5b":{"theoretical":"Reb","practical":"Reb"},"5":{"theoretical":"Re","practical":"Re"},"5#":{"theoretical":"Re#","practical":"Re#"},"6b":{"theoretical":"Mib","practical":"Mib"},"6":{"theoretical":"Mi","practical":"Mi"},"7b":{"theoretical":"Fa","practical":"Fa"},"7":{"theoretical":"Fa#","practical":"Fa#"},"9b":{"theoretical":"Lab","practical":"Lab"},"9":{"theoretical":"La","practical":"La"},"9#":{"theoretical":"La#","practical":"La#"},"11":{"theoretical":"Do","practical":"Do"},"11#":{"theoretical":"Do#","practical":"Do#"},"13":{"theoretical":"Mi","practical":"Mi"},"13b":{"theoretical":"Mib","practical":"Mib"}},"Solb":{"2b":{"theoretical":"Sol","practical":"Sol"},"2":{"theoretical":"Lab","practical":"Lab"},"2#":{"theoretical":"La","practical":"La"},"3b":{"theoretical":"La","practical":"La"},"3":{"theoretical":"Sib","practical":"Sib"},"4":{"theoretical":"Si","practical":"Si"},"4#":{"theoretical":"Si#","practical":"Do"},"5b":{"theoretical":"Do","practical":"Do"},"5":{"theoretical":"Reb","practical":"Reb"},"5#":{"theoretical":"Re","practical":"Re"},"6b":{"theoretical":"Re","practical":"Re"},"6":{"theoretical":"Mib","practical":"Mib"},"7b":{"theoretical":"Fab","practical":"Mi"},"7":{"theoretical":"Fa","practical":"Fa"},"9b":{"theoretical":"Sol","practical":"Sol"},"9":{"theoretical":"Lab","practical":"Lab"},"9#":{"theoretical":"La","practical":"La"},"11":{"theoretical":"Si","practical":"Si"},"11#":{"theoretical":"Si#","practical":"Do"},"13":{"theoretical":"Mib","practical":"Mib"},"13b":{"theoretical":"Re","practical":"Re"}},"La":{"2b":{"theoretical":"Sib","practical":"Sib"},"2":{"theoretical":"Si","practical":"Si"},"2#":{"theoretical":"Si#","practical":"Do"},"3b":{"theoretical":"Do","practical":"Do"},"3":{"theoretical":"Do#","practical":"Do#"},"4":{"theoretical":"Re","practical":"Re"},"4#":{"theoretical":"Re#","practical":"Re#"},"5b":{"theoretical":"Mib","practical":"Mib"},"5":{"theoretical":"Mi","practical":"Mi"},"5#":{"theoretical":"Mi#","practical":"Fa"},"6b":{"theoretical":"Fa","practical":"Fa"},"6":{"theoretical":"Fa#","practical":"Fa#"},"7b":{"theoretical":"Sol","practical":"Sol"},"7":{"theoretical":"Sol#","practical":"Sol#"},"9b":{"theoretical":"Sib","practical":"Sib"},"9":{"theoretical":"Si","practical":"Si"},"9#":{"theoretical":"Si#","practical":"Do"},"11":{"theoretical":"Re","practical":"Re"},"11#":{"theoretical":"Re#","practical":"Re#"},"13":{"theoretical":"Fa#","practical":"Fa#"},"13b":{"theoretical":"Fa","practical":"Fa"}},"Lab":{"2b":{"theoretical":"La","practical":"La"},"2":{"theoretical":"Sib","practical":"Sib"},"2#":{"theoretical":"Si","practical":"Si"},"3b":{"theoretical":"Dob","practical":"Si"},"3":{"theoretical":"Do","practical":"Do"},"4":{"theoretical":"Reb","practical":"Reb"},"4#":{"theoretical":"Re","practical":"Re"},"5b":{"theoretical":"Re","practical":"Re"},"5":{"theoretical":"Mib","practical":"Mib"},"5#":{"theoretical":"Mi","practical":"Mi"},"6b":{"theoretical":"Fab","practical":"Mi"},"6":{"theoretical":"Fa","practical":"Fa"},"7b":{"theoretical":"Solb","practical":"Solb"},"7":{"theoretical":"Sol","practical":"Sol"},"9b":{"theoretical":"La","practical":"La"},"9":{"theoretical":"Sib","practical":"Sib"},"9#":{"theoretical":"Si","practical":"Si"},"11":{"theoretical":"Reb","practical":"Reb"},"11#":{"theoretical":"Re","practical":"Re"},"13":{"theoretical":"Fa","practical":"Fa"},"13b":{"theoretical":"Fab","practical":"Mi"}},"Sib":{"2b":{"theoretical":"Si","practical":"Si"},"2":{"theoretical":"Do","practical":"Do"},"2#":{"theoretical":"Do#","practical":"Do#"},"3b":{"theoretical":"Reb","practical":"Reb"},"3":{"theoretical":"Re","practical":"Re"},"4":{"theoretical":"Mib","practical":"Mib"},"4#":{"theoretical":"Mi","practical":"Mi"},"5b":{"theoretical":"Fab","practical":"Mi"},"5":{"theoretical":"Fa","practical":"Fa"},"5#":{"theoretical":"Fa#","practical":"Fa#"},"6b":{"theoretical":"Solb","practical":"Solb"},"6":{"theoretical":"Sol","practical":"Sol"},"7b":{"theoretical":"Lab","practical":"Lab"},"7":{"theoretical":"La","practical":"La"},"9b":{"theoretical":"Si","practical":"Si"},"9":{"theoretical":"Do","practical":"Do"},"9#":{"theoretical":"Do#","practical":"Do#"},"11":{"theoretical":"Mib","practical":"Mib"},"11#":{"theoretical":"Mi","practical":"Mi"},"13":{"theoretical":"Sol","practical":"Sol"},"13b":{"theoretical":"Solb","practical":"Solb"}},"Si":{"2b":{"theoretical":"Do","practical":"Do"},"2":{"theoretical":"Do#","practical":"Do#"},"2#":{"theoretical":"Re","practical":"Re"},"3b":{"theoretical":"Re","practical":"Re"},"3":{"theoretical":"Re#","practical":"Re#"},"4":{"theoretical":"Mi","practical":"Mi"},"4#":{"theoretical":"Mi#","practical":"Fa"},"5b":{"theoretical":"Fa","practical":"Fa"},"5":{"theoretical":"Fa#","practical":"Fa#"},"5#":{"theoretical":"Sol","practical":"Sol"},"6b":{"theoretical":"Sol","practical":"Sol"},"6":{"theoretical":"Sol#","practical":"Sol#"},"7b":{"theoretical":"La","practical":"La"},"7":{"theoretical":"La#","practical":"La#"},"9b":{"theoretical":"Do","practical":"Do"},"9":{"theoretical":"Do#","practical":"Do#"},"9#":{"theoretical":"Re","practical":"Re"},"11":{"theoretical":"Mi","practical":"Mi"},"11#":{"theoretical":"Mi#","practical":"Fa"},"13":{"theoretical":"Sol#","practical":"Sol#"},"13b":{"theoretical":"Sol","practical":"Sol"}}};
+
+    const ordinals = {
+      '2': 'seconda',
+      '3': 'terza',
+      '4': 'quarta',
+      '5': 'quinta',
+      '6': 'sesta',
+      '7': 'settima',
+      '9': 'nona',
+      '11': 'undicesima',
+      '13': 'tredicesima'
+    };
+
+    const intvTypes = {
+      'Naturali': ["2","3","4","5","6","7","9","11","13"],
+      'Alterati': ["2b","2#","3b","4#","5b","5#","6b","7b","9b","9#","11#","13b"],
+      'Misti': ["2","3","4","5","6","7","9","11","13","2b","2#","3b","4#","5b","5#","6b","7b","9b","9#","11#","13b"]
+    };
+
+    let voices = [];
+    if ('speechSynthesis' in window) {
+      voices = speechSynthesis.getVoices();
+      speechSynthesis.onvoiceschanged = () => {
+        voices = speechSynthesis.getVoices();
+      };
+    }
+
+    function toPron(note) {
+      if (note.endsWith('b')) {
+        let base = note.slice(0, -1);
+        return `${base} bemolle`;
+      } else if (note.endsWith('#')) {
+        let base = note.slice(0, -1);
+        return `${base} diesis`;
+      } else {
+        return note;
+      }
+    }
+
+    function speak(text, onEnd) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'it-IT';
+        const itVoice = voices.find(v => v.lang.startsWith('it')) || voices[0];
+        if (itVoice) {
+          utterance.voice = itVoice;
+        }
+        utterance.onend = () => {
+          if (onEnd) onEnd();
+        };
+        utterance.onerror = () => {
+          if (onEnd) onEnd();
+        };
+        speechSynthesis.speak(utterance);
+      } else {
+        if (onEnd) onEnd();
+      }
+    }
+
+    function random(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    let running = false;
+    let timer = null;
+    let currentCount = 0;
+    let paused = false;
+    let currentAnswerText = '';
+    let currentAnswerSpeak = '';
+    let lastQuestion = null;
+
+    const livelloSelect = document.getElementById('livello');
+    const intervalliSelect = document.getElementById('intervalli');
+    const tonalitaSelect = document.getElementById('tonalita');
+    const multiKeysContainer = document.getElementById('multiKeysContainer');
+    const direzioneSelect = document.getElementById('direzione');
+    const quantitaSelect = document.getElementById('quantita');
+    const actionBtn = document.getElementById('actionBtn');
+    const pausaBtn = document.getElementById('pausaBtn');
+    const questionEl = document.getElementById('question');
+    const answerEl = document.getElementById('answer');
+    const beginnerContainer = document.getElementById('beginnerContainer');
+    const temaBtn = document.getElementById('temaBtn');
+
+    function getLevelConfig() {
+      const val = livelloSelect.value;
+      return {
+        'Beginner (senza tempo)': { time: Infinity, button: true, audioOnly: false, postAnswerDelay: 1000 },
+        'Intermedio (10s)': { time: 10000, button: false, audioOnly: false, postAnswerDelay: 1000 },
+        'Advanced (1s)': { time: 1000, button: false, audioOnly: false, postAnswerDelay: 1000 },
+        'Pro': { time: 150, button: false, audioOnly: true, postAnswerDelay: 200 }
+      }[val];
+    }
+
+    function updatePausaVisibility() {
+      const level = getLevelConfig();
+      pausaBtn.style.display = (level.button || level.time === 150) ? 'none' : 'block';
+    }
+
+    function reset() {
+      running = false;
+      paused = false;
+      currentCount = 0;
+      lastQuestion = null;
+      if (timer) clearTimeout(timer);
+      speechSynthesis.cancel();
+      questionEl.textContent = '';
+      answerEl.textContent = '';
+      beginnerContainer.innerHTML = '';
+      actionBtn.textContent = 'Start';
+      actionBtn.onclick = startExercise;
+      pausaBtn.textContent = 'Pausa';
+      pausaBtn.onclick = pause;
+    }
+
+    function resetIfRunning() {
+      if (running) reset();
+    }
+
+    function getNumQuestions() {
+      const val = quantitaSelect.value;
+      return val === '∞' ? Infinity : parseInt(val);
+    }
+
+    function getSelectedKeys() {
+      if (tonalitaSelect.value === 'Scelta multipla') {
+        return Array.from(multiKeysContainer.querySelectorAll('input[type="checkbox"]:checked')).map(inp => inp.value);
+      } else if (tonalitaSelect.value !== 'Casuale') {
+        return [tonalitaSelect.value];
+      } else {
+        return [];
+      }
+    }
+
+    function isSingleKey() {
+      const selected = getSelectedKeys();
+      return selected.length === 1;
+    }
+
+    function getRandomKey() {
+      const selected = getSelectedKeys();
+      if (tonalitaSelect.value === 'Casuale' || selected.length === 0) {
+        return random(keys);
+      } else {
+        return random(selected);
+      }
+    }
+
+    function getSingleKey() {
+      const selected = getSelectedKeys();
+      if (selected.length === 1) {
+        return selected[0];
+      }
+      return null;
+    }
+
+    function getRandomQuestion() {
+      let q;
+      do {
+        const tonalita = getRandomKey();
+        const intvList = intvTypes[intervalliSelect.value];
+        const intv = random(intvList);
+        let dir = direzioneSelect.value.toLowerCase();
+        dir = dir === 'diretta' ? 'direct' : dir === 'inversa' ? 'inverse' : Math.random() < 0.5 ? 'direct' : 'inverse';
+        q = { key: tonalita, intv, dir };
+      } while (lastQuestion && lastQuestion.key === q.key && lastQuestion.intv === q.intv && lastQuestion.dir === q.dir);
+      lastQuestion = q;
+      return q;
+    }
+
+    function prepareQuestion(q) {
+      const data = intervalData[q.key][q.intv];
+      const theo = data.theoretical;
+      const prac = data.practical;
+      const hasTheo = theo !== prac;
+
+      const num = q.intv.replace(/[b#]/, '');
+      const alt = q.intv.match(/[b#]/)?.[0] || '';
+      const altS = alt === 'b' ? 'bemolle' : alt === '#' ? 'diesis' : '';
+
+      let questionText, speakText, answerText, answerSpeak;
+
+      const level = getLevelConfig();
+      const isSingleKeySelected = isSingleKey();
+
+      if (q.dir === 'direct') {
+        questionText = `${q.intv} di ${q.key}`;
+        if (level.audioOnly && isSingleKeySelected) {
+          if (currentCount === 1) {
+            speakText = `La ${ordinals[num]} ${altS} di ${toPron(q.key)} è?`;
+          } else {
+            speakText = `${ordinals[num]} ${altS}`.trim();
+          }
+        } else {
+          speakText = `La ${ordinals[num]} ${altS} di ${toPron(q.key)} è?`;
+        }
+        answerText = hasTheo ? `${theo} (teorica) / ${prac} (pratica)` : prac;
+        answerSpeak = toPron(prac);
+      } else {
+        if (isSingleKeySelected) {
+          questionText = `${prac} ?`;
+          speakText = `${toPron(prac)}?`;
+          answerText = `${prac} è la ${q.intv} di ${q.key}`;
+          answerSpeak = `${toPron(prac)} è la ${ordinals[num]} ${altS} di ${toPron(q.key)}`;
+        } else {
+          questionText = `${prac} è la ${q.intv} di`;
+          speakText = `${toPron(prac)} è la ${ordinals[num]} ${altS} di?`;
+          answerText = q.key;
+          answerSpeak = toPron(q.key);
+        }
+      }
+
+      return { questionText, speakText, answerText, answerSpeak };
+    }
+
+    function countdown(n) {
+      if (!running) return;
+      if (n > 0) {
+        questionEl.textContent = n;
+        answerEl.textContent = '';
+        speak(n.toString(), () => countdown(n - 1));
+      } else {
+        nextQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (!running) return;
+      if (currentCount >= getNumQuestions()) {
+        reset();
+        return;
+      }
+      currentCount++;
+      const level = getLevelConfig();
+      const q = getRandomQuestion();
+      const { questionText, speakText, answerText, answerSpeak } = prepareQuestion(q);
+      currentAnswerText = answerText;
+      currentAnswerSpeak = answerSpeak;
+
+      if (level.audioOnly) {
+        questionEl.textContent = isSingleKey() ? getSingleKey() : 'solo audio';
+      } else {
+        questionEl.textContent = questionText + (q.dir === 'direct' || !isSingleKey() ? ' è?' : '');
+      }
+      answerEl.textContent = '';
+      beginnerContainer.innerHTML = '';
+
+      speak(speakText, () => {
+        if (!running) return;
+        if (level.button) {
+          const btn = document.createElement('button');
+          btn.id = 'beginnerBtn';
+          btn.textContent = 'Risposta';
+          btn.onclick = () => {
+            if (!running) return;
+            showAnswer(answerText, currentAnswerSpeak, () => {
+              if (!running) return;
+              btn.textContent = 'Prossima domanda';
+              btn.onclick = () => nextQuestion();
+            });
+          };
+          beginnerContainer.appendChild(btn);
+        } else {
+          let effectiveTime = level.time;
+          if (level.audioOnly && isSingleKey() && q.dir === 'inverse') {
+            effectiveTime = 300;
+          }
+          timer = setTimeout(() => {
+            if (!running) return;
+            showAnswer(answerText, currentAnswerSpeak, () => {
+              if (!running) return;
+              setTimeout(() => {
+                if (!running) return;
+                nextQuestion();
+              }, level.postAnswerDelay);
+            });
+          }, effectiveTime);
+        }
+      });
+    }
+
+    function showAnswer(ansText, ansSpeak, callback) {
+      if (!running) return;
+      const level = getLevelConfig();
+      if (!level.audioOnly) {
+        answerEl.textContent = ansText;
+      }
+      speak(ansSpeak, () => {
+        if (!running) return;
+        if (callback) callback();
+      });
+    }
+
+    function startExercise() {
+      running = true;
+      actionBtn.textContent = 'Restart';
+      actionBtn.onclick = reset;
+      currentCount = 0;
+      lastQuestion = null;
+      countdown(3);
+    }
+
+    function pause() {
+      if (timer) clearTimeout(timer);
+      paused = true;
+      pausaBtn.textContent = 'Riprendi';
+      pausaBtn.onclick = resume;
+      speechSynthesis.pause();
+    }
+
+    function resume() {
+      paused = false;
+      pausaBtn.textContent = 'Pausa';
+      pausaBtn.onclick = pause;
+      speechSynthesis.resume();
+      const level = getLevelConfig();
+      timer = setTimeout(() => {
+        if (!running) return;
+        showAnswer(currentAnswerText, currentAnswerSpeak, () => {
+          if (!running) return;
+          setTimeout(() => {
+            if (!running) return;
+            nextQuestion();
+          }, level.postAnswerDelay);
+        });
+      }, level.time);
+    }
+
+    actionBtn.onclick = startExercise;
+    pausaBtn.onclick = pause;
+
+    tonalitaSelect.addEventListener('change', () => {
+      if (tonalitaSelect.value === 'Scelta multipla') {
+        multiKeysContainer.style.display = 'block';
+      } else {
+        multiKeysContainer.style.display = 'none';
+      }
+      resetIfRunning();
+    });
+
+    livelloSelect.addEventListener('change', () => {
+      resetIfRunning();
+      updatePausaVisibility();
+    });
+    intervalliSelect.addEventListener('change', resetIfRunning);
+    direzioneSelect.addEventListener('change', resetIfRunning);
+    quantitaSelect.addEventListener('change', resetIfRunning);
+
+    temaBtn.onclick = () => {
+      document.body.classList.toggle('light');
+      temaBtn.textContent = document.body.classList.contains('light') ? 'Tema: Chiaro/Scuro' : 'Tema: Scuro/Chiaro';
+    };
+
+    updatePausaVisibility();
+
+    function mostraAllenamento() {
+      document.getElementById('schermata-menu').classList.remove('visibile');
+      document.getElementById('schermata-allenamento').classList.add('visibile');
+    }
+    function tornaAlMenu() {
+      reset();
+      document.getElementById('schermata-allenamento').classList.remove('visibile');
+      document.getElementById('schermata-menu').classList.add('visibile');
+    }
+  </script>
+</body>
+</html>
