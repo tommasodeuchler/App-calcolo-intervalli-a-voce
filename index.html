@@ -207,6 +207,20 @@
       background-color: #1e88e5;
       color: white;
     }
+
+    #actionBtn, #menuBtn {
+      background-color: #1e88e5;
+      color: white;
+    }
+
+    .light #actionBtn, .light #menuBtn {
+      background-color: #1e88e5;
+      color: white;
+    }
+
+    #actionBtn:hover, #menuBtn:hover {
+      background-color: #1565c0;
+    }
   </style>
 </head>
 <body>
@@ -221,7 +235,7 @@
       <select id="voiceSelect"></select>
       <button id="testVoiceBtn">Test Voce</button>
     </div>
-    <button class="tema" id="temaBtn" style="position: static; margin-top: auto;">Tema: Scuro/Chiaro</button>
+    <button class="tema" id="temaBtn" style="position: static; margin-top: 60px;">Tema: Scuro/Chiaro</button>
   </div>
 
   <div class="centrato allenamento" id="schermata-allenamento">
@@ -308,7 +322,7 @@
       </div>
     </div>
 
-    <button onclick="tornaAlMenu()">Torna al menù</button>
+    <button id="menuBtn" onclick="tornaAlMenu()">Torna al menù</button>
   </div>
 
   <script>
