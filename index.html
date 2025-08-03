@@ -207,26 +207,12 @@
       background-color: #1e88e5;
       color: white;
     }
-
-    #actionBtn, #menuBtn {
-      background-color: #1e88e5;
-      color: white;
-    }
-
-    .light #actionBtn, .light #menuBtn {
-      background-color: #1e88e5;
-      color: white;
-    }
-
-    #actionBtn:hover, #menuBtn:hover {
-      background-color: #1565c0;
-    }
   </style>
 </head>
 <body>
   <div class="centrato menu visibile" id="schermata-menu">
-    <h1>Allenatore Musicale</h1>
-    <button onclick="mostraAllenamento()">Intervalli musicali singoli</button>
+    <h1>Allenamento Calcoli Intervalli</h1>
+    <button onclick="mostraAllenamento()">Calcolo intervalli singoli</button>
     <button disabled>Triadi (in arrivo)</button>
     <button disabled>Quadriadi (in arrivo)</button>
     <button disabled>Progressioni II V I (in arrivo)</button>
@@ -235,11 +221,11 @@
       <select id="voiceSelect"></select>
       <button id="testVoiceBtn">Test Voce</button>
     </div>
-    <button class="tema" id="temaBtn" style="position: static; margin-top: 60px;">Tema: Scuro/Chiaro</button>
+    <button class="tema" id="temaBtn" style="position: static; margin-top: auto;">Tema: Scuro/Chiaro</button>
   </div>
 
   <div class="centrato allenamento" id="schermata-allenamento">
-    <h2>Allenamento Intervalli</h2>
+    <h2>Calcolo intervalli singoli</h2>
 
     <div class="comandi">
       <button id="actionBtn">Start</button>
@@ -304,7 +290,7 @@
         </div>
       </div>
       <div class="campo">
-        <label for="direzione">Direzione:</label>
+        <label for="direzione">Direzione di calcolo:</label>
         <select id="direzione">
           <option>Diretta</option>
           <option>Inversa</option>
@@ -322,7 +308,7 @@
       </div>
     </div>
 
-    <button id="menuBtn" onclick="tornaAlMenu()">Torna al menù</button>
+    <button onclick="tornaAlMenu()">Torna al menù</button>
   </div>
 
   <script>
