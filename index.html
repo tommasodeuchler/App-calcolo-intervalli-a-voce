@@ -138,10 +138,63 @@
       color: #2e7d32;
     }
 
-    .tema {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
+    #beginnerBtn {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      color: #121212;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .light #beginnerBtn {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    #multiKeysContainer {
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    #multiKeysContainer label {
+      font-size: 14px;
+    }
+
+    .multi-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+
+    #testVoiceBtn {
+      padding: 10px 15px;
+      font-size: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background-color: #1e88e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    #testVoiceBtn:hover {
+      background-color: #1565c0;
+    }
+
+    .light #testVoiceBtn {
+      background-color: #1e88e5;
+      color: white;
+    }
+
+    #voiceSelection {
+      margin-top: 30px;
+    }
+
+    #temaBtn {
       padding: 12px 20px;
       font-size: 14px;
       border-radius: 8px;
@@ -149,6 +202,318 @@
       color: #121212;
       border: none;
       cursor: pointer;
+      margin-top: 30px;
+    }
+
+    .light #temaBtn {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <div class="centrato menu visibile" id="schermata-menu">
+    <h1>Allenatore Musicale</h1>
+    <button onclick="mostraAllenamento()">Intervalli musicali singoli</button>
+    <button disabled>Triadi (in arrivo)</button>
+    <button disabled>Quadriadi (in arrivo)</button>
+    <button disabled>Progressioni II V I (in arrivo)</button>
+    <div class="campo" id="voiceSelection">
+      <label for="voiceSelect">Seleziona Voce:</label>
+      <select id="voiceSelect"></select>
+      <button id="testVoiceBtn">Test Voce</button>
+    </div>
+    <button id="temaBtn">Tema: Scuro/Chiaro</button>
+  </div>
+
+  <div class="centrato allenamento" id="schermata-allenamento">
+    <h2>Allenamento Intervalli</h2>
+
+    <div class="riga-impostazioni">
+      <div class="campo">
+        <label for="livello">Livello:</label>
+        <select id="livello">
+          <option>Beginner (senza tempo)</option>
+          <option>Intermedio (10s)</option>
+          <option>Advanced (1s)</option>
+          <option>Pro</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="intervalli">Intervalli:</label>
+        <select id="intervalli">
+          <option>Misti</option>
+          <option>Naturali</option>
+          <option>Alterati</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="tonalita">Tonalità:</label>
+        <select id="tonalita">
+          <option>C The code tool works, but I need to modify the HTML/JS code as per the user's request.
+
+User requests:
+
+1. Sposta il pulsante "Tema: Scuro/Chiaro" nella pagina iniziale menu, sotto il pulsante "test voce", con la stessa spaziatura che c'è tra "progressioni II V I (in arrivo)" e "seleziona voce". La box del pulsante bianca come era prima.
+
+Currently, #voiceSelection { margin-top: 30px; }
+
+The buttons have margin: 10px; so between buttons 20px.
+
+The spacing between last button and seleziona voce is 30px.
+
+So, for tema button, put it after voiceSelection, with margin-top: 30px or something.
+
+But make it a normal button, not fixed.
+
+And style it like before: background-color: #f0f0f0; color: #121212;
+
+But the menu buttons are blue, but tema was white.
+
+So, add it as <button class="tema" id="temaBtn">Tema: Scuro/Chiaro</button> after the div voiceSelection.
+
+And add style for .menu .tema { position: static; margin-top: 30px; } or something.
+
+Since .tema is fixed, remove position: fixed; make it relative or static.
+
+In style, .tema { position: fixed; ... } so I need to override for menu.
+
+Or move the class.
+
+But to make it white box, keep the style, but remove position: fixed, bottom, right.
+
+So, in CSS, change .tema to not fixed, and place it in the flow.
+
+Since it's now in the menu div, it will be centered.
+
+Yes.
+
+2. "Direzione di calcolo"
+
+Change <label for="direzione">Direzione:</label> to <label for="direzione">Direzione di calcolo:</label>
+
+3. Levare il pulsante "pausa" in modalità advanced.
+
+In updatePausaVisibility: pausaBtn.style.display = (level.button || level.time === 150 || level.time === 1000) ? 'none' : 'block';
+
+Yes.
+
+4. Fix the pause/resume timer in intermedio: it should resume from where left, not restart full or wrong time.
+
+Implement remaining time.
+
+Add global vars: let timerStartTime; let remainingTime; let isPausedDuringTimer = false;
+
+In nextQuestion, when setting timer:
+
+currentEffectiveTime = effectiveTime;
+
+timerStartTime = Date.now();
+
+timer = setTimeout(... , currentEffectiveTime)
+
+In pause:
+
+if (timer) {
+
+  clearTimeout(timer);
+
+  remainingTime = currentEffectiveTime - (Date.now() - timerStartTime);
+
+  if (remainingTime < 0) remainingTime = 0;
+
+  isPausedDuringTimer = true;
+
+}
+
+speechSynthesis.pause();
+
+In resume:
+
+speechSynthesis.resume();
+
+if (isPausedDuringTimer) {
+
+  timer = setTimeout(..., remainingTime);
+
+  isPausedDuringTimer = false;
+
+}
+
+Yes.
+
+Also need to declare let currentEffectiveTime;
+
+And in showAnswer, if pause during answer speak, but no timer there, just speak.
+
+Ok.
+
+For the countdown slow: in speak for countdown, rate=0.8
+
+But user said "rallenta un pochino la velocità del contdown", and previous was that.
+
+In last code, I have function speak(text, onEnd, rate = 1)
+
+In countdown: speak(n.toString(), () => countdown(n - 1), 0.8);
+
+Yes.
+
+For normal speak, no rate, so 1.
+
+And user said voice speed back to before, which is 1, yes.
+
+For countdown, keep slowed.
+
+Now, output the modified code.```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Allenatore Musicale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .light {
+      background-color: #f0f0f0;
+      color: #000000;
+    }
+
+    .centrato {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 4rem 2rem 2rem;
+    }
+
+    h1, h2 {
+      margin-bottom: 1rem;
+    }
+
+    .menu, .allenamento {
+      display: none;
+    }
+
+    .visibile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu button {
+      width: 300px;
+      padding: 15px;
+      font-size: 16px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1e88e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    .menu button:hover:not(:disabled) {
+      background-color: #1565c0;
+    }
+
+    .menu button:disabled {
+      background-color: #555;
+      color: white;
+      cursor: default;
+    }
+
+    .light .menu button:disabled {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .riga-impostazioni {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .campo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      width: 200px;
+      background-color: #f0f0f0;
+      color: #121212;
+    }
+
+    .light select {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .comandi {
+      margin: 2rem 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .comandi button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+      color: #121212;
+      cursor: pointer;
+    }
+
+    .light .comandi button {
+      background-color: #CCCCCC;
+      color: #000000;
+    }
+
+    .display {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    #question, #answer {
+      font-size: 24px;
+      margin: 1rem 0;
+    }
+
+    #answer {
+      color: #4caf50;
+    }
+
+    .light #answer {
+      color: #2e7d32;
+    }
+
+    .tema {
+      padding: 12px 20px;
+      font-size: 14px;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+      color: #121212;
+      border: none;
+      cursor: pointer;
+      width: auto;
     }
 
     .light .tema {
@@ -211,6 +576,10 @@
     #voiceSelection {
       margin-top: 30px;
     }
+
+    #temaContainer {
+      margin-top: 30px;
+    }
   </style>
 </head>
 <body>
@@ -224,6 +593,9 @@
       <label for="voiceSelect">Seleziona Voce:</label>
       <select id="voiceSelect"></select>
       <button id="testVoiceBtn">Test Voce</button>
+    </div>
+    <div id="temaContainer">
+      <button class="tema" id="temaBtn">Tema: Scuro/Chiaro</button>
     </div>
   </div>
 
@@ -282,7 +654,7 @@
         </div>
       </div>
       <div class="campo">
-        <label for="direzione">Direzione:</label>
+        <label for="direzione">Direzione di calcolo:</label>
         <select id="direzione">
           <option>Diretta</option>
           <option>Inversa</option>
@@ -312,7 +684,6 @@
       <div id="beginnerContainer"></div>
     </div>
 
-    <button class="tema" id="temaBtn">Tema: Scuro/Chiaro</button>
   </div>
 
   <script>
@@ -431,6 +802,10 @@
     let currentAnswerText = '';
     let currentAnswerSpeak = '';
     let lastQuestion = null;
+    let timerStartTime;
+    let remainingTime;
+    let currentEffectiveTime;
+    let isPausedDuringTimer = false;
 
     const livelloSelect = document.getElementById('livello');
     const intervalliSelect = document.getElementById('intervalli');
@@ -467,7 +842,7 @@
 
     function updatePausaVisibility() {
       const level = getLevelConfig();
-      pausaBtn.style.display = (level.button || level.time === 150) ? 'none' : 'block';
+      pausaBtn.style.display = (level.button || level.time === 150 || level.time === 1000) ? 'none' : 'block';
     }
 
     function reset() {
@@ -484,6 +859,7 @@
       actionBtn.onclick = startExercise;
       pausaBtn.textContent = 'Pausa';
       pausaBtn.onclick = pause;
+      isPausedDuringTimer = false;
     }
 
     function resetIfRunning() {
@@ -638,6 +1014,8 @@
           if (level.audioOnly && isSingleKey() && q.dir === 'inverse') {
             effectiveTime = 300;
           }
+          currentEffectiveTime = effectiveTime;
+          timerStartTime = Date.now();
           timer = setTimeout(() => {
             if (!running) return;
             showAnswer(answerText, currentAnswerSpeak, () => {
@@ -647,7 +1025,7 @@
                 nextQuestion();
               }, level.postAnswerDelay);
             });
-          }, effectiveTime);
+          }, currentEffectiveTime);
         }
       });
     }
@@ -674,7 +1052,12 @@
     }
 
     function pause() {
-      if (timer) clearTimeout(timer);
+      if (timer) {
+        clearTimeout(timer);
+        remainingTime = currentEffectiveTime - (Date.now() - timerStartTime);
+        if (remainingTime < 0) remainingTime = 0;
+        isPausedDuringTimer = true;
+      }
       paused = true;
       pausaBtn.textContent = 'Riprendi';
       pausaBtn.onclick = resume;
@@ -686,17 +1069,20 @@
       pausaBtn.textContent = 'Pausa';
       pausaBtn.onclick = pause;
       speechSynthesis.resume();
-      const level = getLevelConfig();
-      timer = setTimeout(() => {
-        if (!running) return;
-        showAnswer(currentAnswerText, currentAnswerSpeak, () => {
+      if (isPausedDuringTimer) {
+        timer = setTimeout(() => {
           if (!running) return;
-          setTimeout(() => {
+          showAnswer(currentAnswerText, currentAnswerSpeak, () => {
             if (!running) return;
-            nextQuestion();
-          }, level.postAnswerDelay);
-        });
-      }, level.time);
+            const level = getLevelConfig();
+            setTimeout(() => {
+              if (!running) return;
+              nextQuestion();
+            }, level.postAnswerDelay);
+          });
+        }, remainingTime);
+        isPausedDuringTimer = false;
+      }
     }
 
     actionBtn.onclick = startExercise;
