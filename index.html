@@ -187,11 +187,36 @@
       gap: 5px;
       margin-bottom: 5px;
     }
+
+    #testVoiceBtn {
+      padding: 10px 15px;
+      font-size: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background-color: #1e88e5;
+      color: white;
+      cursor: pointer;
+    }
+
+    #testVoiceBtn:hover {
+      background-color: #1565c0;
+    }
+
+    .light #testVoiceBtn {
+      background-color: #1e88e5;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <div class="centrato menu visibile" id="schermata-menu">
     <h1>Allenatore Musicale</h1>
+    <div class="campo">
+      <label for="voiceSelect">Seleziona Voce:</label>
+      <select id="voiceSelect"></select>
+      <button id="testVoiceBtn">Test Voce</button>
+    </div>
     <button onclick="mostraAllenamento()">Intervalli musicali singoli</button>
     <button disabled>Triadi (in arrivo)</button>
     <button disabled>Quadriadi (in arrivo)</button>
@@ -310,11 +335,48 @@
     };
 
     let voices = [];
+    let selectedVoice = null;
+
     if ('speechSynthesis' in window) {
+      speechSynthesis.onvoiceschanged = populateVoices;
+      if (speechSynthesis.getVoices().length > 0) {
+        populateVoices();
+      }
+    }
+
+    function populateVoices() {
       voices = speechSynthesis.getVoices();
-      speechSynthesis.onvoiceschanged = () => {
-        voices = speechSynthesis.getVoices();
-      };
+      const voiceSelect = document.getElementById('voiceSelect');
+      voiceSelect.innerHTML = '';
+
+      // Prima le voci italiane
+      const itVoices = voices.filter(v => v.lang.startsWith('it'));
+      itVoices.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+      });
+
+      // Se nessuna italiana, aggiungi tutte
+      if (itVoices.length === 0) {
+        voices.forEach(voice => {
+          const option = document.createElement('option');
+          option.value = voice.name;
+          option.textContent = `${voice.name} (${voice.lang})`;
+          voiceSelect.appendChild(option);
+        });
+      }
+
+      // Se ci sono opzioni, seleziona la prima
+      if (voiceSelect.options.length > 0) {
+        voiceSelect.selectedIndex = 0;
+        selectedVoice = voices.find(v => v.name === voiceSelect.value);
+      } else {
+        const option = document.createElement('option');
+        option.textContent = 'Nessuna voce disponibile';
+        voiceSelect.appendChild(option);
+      }
     }
 
     function toPron(note) {
@@ -330,12 +392,16 @@
     }
 
     function speak(text, onEnd) {
-      if ('speechSynthesis' in window) {
+      if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'it-IT';
-        const itVoice = voices.find(v => v.lang.startsWith('it')) || voices[0];
-        if (itVoice) {
-          utterance.voice = itVoice;
+        if (selectedVoice) {
+          utterance.voice = selectedVoice;
+        } else {
+          const itVoice = voices.find(v => v.lang.startsWith('it')) || voices[0];
+          if (itVoice) {
+            utterance.voice = itVoice;
+          }
         }
         utterance.onend = () => {
           if (onEnd) onEnd();
@@ -373,6 +439,16 @@
     const answerEl = document.getElementById('answer');
     const beginnerContainer = document.getElementById('beginnerContainer');
     const temaBtn = document.getElementById('temaBtn');
+    const voiceSelect = document.getElementById('voiceSelect');
+    const testVoiceBtn = document.getElementById('testVoiceBtn');
+
+    voiceSelect.addEventListener('change', () => {
+      selectedVoice = voices.find(v => v.name === voiceSelect.value);
+    });
+
+    testVoiceBtn.addEventListener('click', () => {
+      speak("Questo è il suono della voce.");
+    });
 
     function getLevelConfig() {
       const val = livelloSelect.value;
