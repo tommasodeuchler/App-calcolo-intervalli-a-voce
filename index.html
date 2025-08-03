@@ -209,7 +209,7 @@
     }
 
     #voiceSelection {
-      margin-top: 20px;
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -395,11 +395,11 @@
       }
     }
 
-    function speak(text, onEnd) {
+    function speak(text, onEnd, rate = 1) {
       if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'it-IT';
-        utterance.rate = 0.9; // Rallenta leggermente la voce
+        utterance.rate = rate;
         if (selectedVoice) {
           utterance.voice = selectedVoice;
         } else {
@@ -591,7 +591,7 @@
       if (n > 0) {
         questionEl.textContent = n;
         answerEl.textContent = '';
-        speak(n.toString(), () => countdown(n - 1));
+        speak(n.toString(), () => countdown(n - 1), 0.8);
       } else {
         nextQuestion();
       }
