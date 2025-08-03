@@ -24,7 +24,13 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      padding: 4rem 2rem 2rem;
+      padding: 2rem 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .centrato {
+        padding: 4rem 2rem 2rem;
+      }
     }
 
     h1, h2 {
@@ -74,12 +80,15 @@
       justify-content: center;
       gap: 1rem;
       margin: 1rem 0;
+      width: 100%;
+      max-width: 800px;
     }
 
     .campo {
       display: flex;
       flex-direction: column;
       align-items: center;
+      flex: 1 1 200px;
     }
 
     select {
@@ -87,7 +96,8 @@
       font-size: 16px;
       border-radius: 6px;
       border: none;
-      width: 200px;
+      width: 100%;
+      max-width: 200px;
       background-color: #f0f0f0;
       color: #121212;
     }
@@ -98,14 +108,14 @@
     }
 
     .comandi {
-      margin: 2rem 0 1rem;
+      margin: 1rem 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
     }
 
-    .comandi button {
+    .comandi button, .back-button {
       padding: 12px 20px;
       font-size: 16px;
       border: none;
@@ -115,14 +125,15 @@
       cursor: pointer;
     }
 
-    .light .comandi button {
+    .light .comandi button, .light .back-button {
       background-color: #CCCCCC;
       color: #000000;
     }
 
     .display {
       text-align: center;
-      margin: 2rem 0;
+      margin: 1rem 0;
+      width: 100%;
     }
 
     #question, #answer {
@@ -136,24 +147,6 @@
 
     .light #answer {
       color: #2e7d32;
-    }
-
-    .tema {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      padding: 12px 20px;
-      font-size: 14px;
-      border-radius: 8px;
-      background-color: #f0f0f0;
-      color: #121212;
-      border: none;
-      cursor: pointer;
-    }
-
-    .light .tema {
-      background-color: #CCCCCC;
-      color: #000000;
     }
 
     #beginnerBtn {
@@ -175,6 +168,7 @@
     #multiKeysContainer {
       margin-top: 1rem;
       text-align: left;
+      width: 100%;
     }
 
     #multiKeysContainer label {
@@ -186,6 +180,7 @@
       justify-content: center;
       gap: 5px;
       margin-bottom: 5px;
+      flex-wrap: wrap;
     }
 
     #testVoiceBtn {
@@ -207,6 +202,11 @@
       background-color: #1e88e5;
       color: white;
     }
+
+    .back-button {
+      margin-top: auto;
+      margin-bottom: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -226,6 +226,17 @@
 
   <div class="centrato allenamento" id="schermata-allenamento">
     <h2>Allenamento Intervalli</h2>
+
+    <div class="display">
+      <div id="question"></div>
+      <div id="answer"></div>
+      <div id="beginnerContainer"></div>
+    </div>
+
+    <div class="comandi">
+      <button id="actionBtn">Start</button>
+      <button id="pausaBtn">Pausa</button>
+    </div>
 
     <div class="riga-impostazioni">
       <div class="campo">
@@ -297,18 +308,7 @@
       </div>
     </div>
 
-    <div class="comandi">
-      <button id="actionBtn">Start</button>
-      <button id="pausaBtn">Pausa</button>
-      <button onclick="tornaAlMenu()">Torna al menù</button>
-    </div>
-
-    <div class="display">
-      <div id="question"></div>
-      <div id="answer"></div>
-      <div id="beginnerContainer"></div>
-    </div>
-
+    <button class="back-button" onclick="tornaAlMenu()">Torna al menù</button>
   </div>
 
   <script>
