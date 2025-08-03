@@ -462,7 +462,7 @@
 
     function updatePausaVisibility() {
       const level = getLevelConfig();
-      pausaBtn.style.display = (level.button || level.time === 150) ? 'none' : 'block';
+      pausaBtn.style.display = (level.time === 10000) ? 'block' : 'none';
     }
 
     function reset() {
@@ -691,7 +691,7 @@
             nextQuestion();
           }, level.postAnswerDelay);
         });
-      }, level.time);
+      }, 3000);
     }
 
     actionBtn.onclick = startExercise;
