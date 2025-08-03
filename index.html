@@ -207,20 +207,24 @@
       background-color: #1e88e5;
       color: white;
     }
+
+    #voiceSelection {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="centrato menu visibile" id="schermata-menu">
     <h1>Allenatore Musicale</h1>
-    <div class="campo">
-      <label for="voiceSelect">Seleziona Voce:</label>
-      <select id="voiceSelect"></select>
-      <button id="testVoiceBtn">Test Voce</button>
-    </div>
     <button onclick="mostraAllenamento()">Intervalli musicali singoli</button>
     <button disabled>Triadi (in arrivo)</button>
     <button disabled>Quadriadi (in arrivo)</button>
     <button disabled>Progressioni II V I (in arrivo)</button>
+    <div class="campo" id="voiceSelection">
+      <label for="voiceSelect">Seleziona Voce:</label>
+      <select id="voiceSelect"></select>
+      <button id="testVoiceBtn">Test Voce</button>
+    </div>
   </div>
 
   <div class="centrato allenamento" id="schermata-allenamento">
@@ -395,6 +399,7 @@
       if ('speechSynthesis' in window && text) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'it-IT';
+        utterance.rate = 0.9; // Rallenta leggermente la voce
         if (selectedVoice) {
           utterance.voice = selectedVoice;
         } else {
